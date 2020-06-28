@@ -6,6 +6,7 @@ const Dish = require('../models/dish')
 const SubMenu = require('../models/subMenu')
 const Menu = require('../models/menu')
 
+// Setters
 async function createUser({ userInput: { email, name, password } }, _) {
 
 	const errors = []
@@ -72,6 +73,18 @@ async function createMenu({ data: { name, items } }, _) {
 		.catch(err => console.log(err))
 }
 
+
+// Getters
+async function dish({ id }) {
+	const post = await Dish.findById(id)
+
+	if (post) return { ...post._doc, _id: post._id.toString() }
+
+	const error = new Eror('Dish not found')
+	error.code = 404
+	throw error
+}
+
 async function dishes({ page }, _) {
 	const basePage = page >= 1 ? page : 1
 	const perPage = 10
@@ -81,7 +94,6 @@ async function dishes({ page }, _) {
 		.sort({ createdAt: -1 })
 		.skip((basePage - 1) * perPage)
 		.limit(perPage)
-		.populate('creator')
 
 	return {
 		items: dishes.map(d => ({ ...d._doc, _id: d._id.toString() })),
@@ -89,8 +101,33 @@ async function dishes({ page }, _) {
 	}
 }
 
-module.exports = {
+async function menu({ id }) {
+	const menu = await Menu.findById(id).populate('creator')
 
+	if (menu) return { ...menu._doc, _id: menu._id.toString() }
+
+	const error = new Error('Menu not found')
+	error.code = 404
+	throw error
+}
+
+async function menus({ page }, _) {
+	const basePage = page >= 1 ? page : 1
+	const perPage = 10
+	const totalMenus = await Menu.find().countDocuments()
+
+	const menus = await Menu.find()
+		.sort({ creattedAt: -1 })
+		.skip((basePage - 1) * perPage)
+		.limit(perPage)
+
+	return {
+		items: menus.map(d => ({ ...d._doc, _id: d._id.toString() })),
+		count: totalMenus
+	}
+}
+
+module.exports = {
 	// Setters
 	createUser,
 	createDish,
@@ -98,5 +135,8 @@ module.exports = {
 	createMenu,
 
 	// Getters
-	dishes
+	dish,
+	dishes,
+	menu,
+	menus
 }

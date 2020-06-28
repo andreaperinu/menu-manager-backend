@@ -55,10 +55,17 @@ module.exports = buildSchema(`
 		items: [Dish!]!
 		count: Int!
 	}
-	
 
+	type Menus {
+		items: [Menu!]!
+		count: Int!
+	}
+	
 	type RootQuery {
-		dishes(page: Int): Dishes!
+		dish(id: ID!): Dish!
+		dishes(page: Int): Dishes
+		menu(id: ID!): Menu!
+		menus(page: Int): Menus
 	}
 
 	type RootMutation {
