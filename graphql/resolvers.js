@@ -44,6 +44,23 @@ async function createDish({ data: { name, description, price } }, _) {
 	return { ...createdDish._doc, _id: createdDish._id.toString() }
 }
 
+async function deleteDish({ id }, _) {
+	const dish = await Dish.findById(id)
+
+	if (!dish) {
+		const error = new Error(`Dish ${id} not found!`)
+		error.code = 404
+		throw error
+	}
+
+	await Dish.findByIdAndRemove(id)
+	return true
+}
+
+function deleteDishes({ ids }) {
+	return ids.map(async (id) => await deleteDish({ id })).reduce((a, b) => a && b)
+}
+
 function createSubMenu({ data: { name, items } }, _) {
 
 	const dishes = items.map(({ name, description, price }) =>
@@ -86,14 +103,14 @@ async function dish({ id }) {
 }
 
 async function dishes({ page }, _) {
-	const basePage = page >= 1 ? page : 1
-	const perPage = 10
+	// const basePage = page >= 1 ? page : 1
+	// const perPage = 10
 	const totalDishes = await Dish.find().countDocuments()
 
 	const dishes = await Dish.find()
 		.sort({ createdAt: -1 })
-		.skip((basePage - 1) * perPage)
-		.limit(perPage)
+		// .skip((basePage - 1) * perPage)
+		// .limit(perPage)
 
 	return {
 		items: dishes.map(d => ({ ...d._doc, _id: d._id.toString() })),
@@ -133,6 +150,8 @@ module.exports = {
 	createDish,
 	createSubMenu,
 	createMenu,
+	deleteDish,
+	deleteDishes,
 
 	// Getters
 	dish,
