@@ -77,7 +77,6 @@ module.exports = buildSchema(`
 		createSubMenu(data: SubMenuInputData): SubMenu!
 	}
 
-
 	schema {
 		query: RootQuery
 		mutation: RootMutation
