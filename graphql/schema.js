@@ -19,6 +19,7 @@ module.exports = buildSchema(`
 	}
 
 	input DishInputData {
+		_id: ID!
 		name: String!
 		description: String
 		price: Int!

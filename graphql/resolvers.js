@@ -63,9 +63,10 @@ function deleteDishes({ ids }) {
 
 function createSubMenu({ data: { name, items } }, _) {
 
-	const dishes = items.map(({ name, description, price }) =>
-		createDish({ data: { name, description, price } })
-	)
+	const dishes = items.map(({ name, description, price }) => {
+		const createdDish = new Dish({ name, description, price })
+		return { ...createdDish._doc, _id: createdDish._id.toString() }
+	})
 
 	return Promise
 		.all(dishes)
