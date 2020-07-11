@@ -110,8 +110,8 @@ async function dishes({ page }, _) {
 
 	const dishes = await Dish.find()
 		.sort({ createdAt: -1 })
-		// .skip((basePage - 1) * perPage)
-		// .limit(perPage)
+	// .skip((basePage - 1) * perPage)
+	// .limit(perPage)
 
 	return {
 		items: dishes.map(d => ({ ...d._doc, _id: d._id.toString() })),
@@ -145,6 +145,19 @@ async function menus({ page }, _) {
 	}
 }
 
+async function deleteMenu({ id }, _) {
+	const menu = await Menu.findById(id)
+
+	if (!menu) {
+		const error = new Error(`Menu ${id} not found!`)
+		error.code = 404
+		throw error
+	}
+
+	await Menu.findByIdAndRemove(id)
+	return true
+}
+
 module.exports = {
 	// Setters
 	createUser,
@@ -153,6 +166,7 @@ module.exports = {
 	createMenu,
 	deleteDish,
 	deleteDishes,
+	deleteMenu,
 
 	// Getters
 	dish,

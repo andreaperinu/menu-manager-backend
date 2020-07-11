@@ -72,10 +72,11 @@ module.exports = buildSchema(`
 	type RootMutation {
 		createUser(data: UserInputData): User!
 		createDish(data: DishInputData): Dish!
-		deleteDish(id: ID!): Boolean
-		deleteDishes(ids: [ID!]!): Boolean
 		createMenu(data: MenuInputData): Menu!
 		createSubMenu(data: SubMenuInputData): SubMenu!
+		deleteDish(id: ID!): Boolean
+		deleteDishes(ids: [ID!]!): Boolean
+		deleteMenu(id: ID!): Boolean
 	}
 
 	schema {
