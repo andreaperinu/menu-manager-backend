@@ -53,7 +53,9 @@ async function editDish({ data: { id, description, price } }, _) {
 		throw error
 	}
 
-	const editedDish = await Dish.findByIdAndUpdate(id, { description, price }, { new: true })
+	const editedDish = await Dish.findByIdAndUpdate(
+		id, { description, price }, { new: true, useFindAndModify: false }
+	)
 	return editedDish
 }
 
@@ -66,7 +68,7 @@ async function deleteDish({ id }, _) {
 		throw error
 	}
 
-	await Dish.findByIdAndRemove(id)
+	await Dish.findByIdAndRemove(id, { useFindAndModify: false })
 	return true
 }
 
@@ -167,7 +169,7 @@ async function deleteMenu({ id }, _) {
 		throw error
 	}
 
-	await Menu.findByIdAndRemove(id)
+	await Menu.findByIdAndRemove(id, { useFindAndModify: false })
 	return true
 }
 
