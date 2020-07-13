@@ -44,6 +44,19 @@ async function createDish({ data: { name, description, price } }, _) {
 	return { ...createdDish._doc, _id: createdDish._id.toString() }
 }
 
+async function editDish({ data: { id, description, price } }, _) {
+	const dish = await Dish.findById(id)
+
+	if (!dish) {
+		const error = new Error(`Dish ${id} not found!`)
+		error.code = 404
+		throw error
+	}
+
+	const editedDish = await Dish.findByIdAndUpdate(id, { description, price }, { new: true })
+	return editedDish
+}
+
 async function deleteDish({ id }, _) {
 	const dish = await Dish.findById(id)
 
@@ -162,6 +175,7 @@ module.exports = {
 	// Setters
 	createUser,
 	createDish,
+	editDish,
 	createSubMenu,
 	createMenu,
 	deleteDish,

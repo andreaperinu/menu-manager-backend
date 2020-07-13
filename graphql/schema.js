@@ -24,6 +24,12 @@ module.exports = buildSchema(`
 		price: Int!
 	}
 
+	input DishEditInputData {
+		id: ID!
+		description: String
+		price: Int!
+	}
+
 
 	type User {
 		_id: ID!
@@ -71,6 +77,7 @@ module.exports = buildSchema(`
 	type RootMutation {
 		createUser(data: UserInputData): User!
 		createDish(data: DishInputData): Dish!
+		editDish(data: DishEditInputData): Dish!
 		createMenu(data: MenuInputData): Menu!
 		createSubMenu(data: SubMenuInputData): SubMenu!
 		deleteDish(id: ID!): Boolean
